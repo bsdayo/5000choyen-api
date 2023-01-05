@@ -1,4 +1,4 @@
-import { createCanvas, registerFont } from 'canvas'
+import { createCanvas, DOMMatrix, registerFont } from 'canvas'
 import path from 'path'
 
 export interface GosenConfig {
@@ -12,22 +12,15 @@ export default async function generateImage(
   upper: string,
   lower: string,
   offsetWidth: number,
-  config: GosenConfig,
+  config: GosenConfig
 ): Promise<Buffer> {
-
   // Fonts
-  registerFont(
-    path.resolve(__dirname, config.font.upper),
-    {
-      family: 'UpperFont',
-    }
-  )
-  registerFont(
-    path.resolve(__dirname, config.font.lower),
-    {
-      family: 'LowerFont',
-    }
-  )
+  registerFont(path.resolve(__dirname, config.font.upper), {
+    family: 'UpperFont',
+  })
+  registerFont(path.resolve(__dirname, config.font.lower), {
+    family: 'LowerFont',
+  })
 
   // Settings
   const upperFont = `100px UpperFont`
@@ -59,7 +52,7 @@ export default async function generateImage(
   ctx.lineJoin = 'round'
   ctx.fillStyle = '#fff'
   ctx.fillRect(0, 0, canvas.width, canvas.height)
-  ctx.setTransform(1, 0, -0.4, 1, 0, 0)
+  ctx.setTransform(new DOMMatrix([1, 0, -0.4, 1, 0, 0]))
 
   let grad
 
@@ -188,5 +181,5 @@ export default async function generateImage(
   ctx.fillStyle = grad
   ctx.fillText(lower, lowerPosX, lowerPosY - 3)
 
-  return canvas.toBuffer('image/jpeg');
+  return canvas.toBuffer('image/jpeg')
 }
